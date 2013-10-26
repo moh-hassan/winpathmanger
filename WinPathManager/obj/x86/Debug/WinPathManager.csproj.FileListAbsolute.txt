@@ -1,0 +1,9 @@
+F:\mydocument\Visual Studio 2010\Projects\codeplex\WinPathManager\WinPathManager\bin\Debug\WinPathManager.exe
+F:\mydocument\Visual Studio 2010\Projects\codeplex\WinPathManager\WinPathManager\bin\Debug\WinPathManager.pdb
+F:\mydocument\Visual Studio 2010\Projects\codeplex\WinPathManager\WinPathManager\obj\x86\Debug\ResolveAssemblyReference.cache
+F:\mydocument\Visual Studio 2010\Projects\codeplex\WinPathManager\WinPathManager\obj\x86\Debug\WinPathManager.Form1.resources
+F:\mydocument\Visual Studio 2010\Projects\codeplex\WinPathManager\WinPathManager\obj\x86\Debug\WinPathManager.Properties.Resources.resources
+F:\mydocument\Visual Studio 2010\Projects\codeplex\WinPathManager\WinPathManager\obj\x86\Debug\GenerateResource.read.1.tlog
+F:\mydocument\Visual Studio 2010\Projects\codeplex\WinPathManager\WinPathManager\obj\x86\Debug\GenerateResource.write.1.tlog
+F:\mydocument\Visual Studio 2010\Projects\codeplex\WinPathManager\WinPathManager\obj\x86\Debug\WinPathManager.exe
+F:\mydocument\Visual Studio 2010\Projects\codeplex\WinPathManager\WinPathManager\obj\x86\Debug\WinPathManager.pdb
