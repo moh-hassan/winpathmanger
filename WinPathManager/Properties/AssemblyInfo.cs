@@ -6,12 +6,12 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("WinPathManager")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Edit/repair window Path Variable")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Mohamed Hassan")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("WinPathManager")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyTrademark("Mohamed Hassan")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("cd963947-9773-4a36-a039-7ea4c142480a")]
+[assembly: Guid("8fe3cbb8-bec8-4db2-a0fc-e684a104dffb")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyVersion("0.3.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
