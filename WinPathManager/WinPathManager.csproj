@@ -67,10 +67,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddPath.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddPath.Designer.cs">
+      <DependentUpon>AddPath.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Class1.cs" />
     <Compile Include="convertor\Backcolorconvertor.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="convertor\BoolConvertor.cs" />
+    <Compile Include="DelPath.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DelPath.Designer.cs">
+      <DependentUpon>DelPath.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Help.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -94,6 +107,12 @@
     <Compile Include="UserControls\UserControlPathView.Designer.cs">
       <DependentUpon>UserControlPathView.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="AddPath.resx">
+      <DependentUpon>AddPath.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DelPath.resx">
+      <DependentUpon>DelPath.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Help.resx">
       <DependentUpon>Help.cs</DependentUpon>
     </EmbeddedResource>
@@ -130,9 +149,15 @@
     <Content Include="framework\WindowsBase.WinForms.dll" />
     <Content Include="framework\WindowsFormsToolkit.dll" />
     <Content Include="framework\WindowsFormsToolkit.MVVM.dll" />
-    <Content Include="history.txt" />
-    <Content Include="License.txt" />
-    <Content Include="Readme.txt" />
+    <Content Include="history.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="License.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Readme.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="ReduceSize.ico" />
     <EmbeddedResource Include="sucess.ico" />
   </ItemGroup>

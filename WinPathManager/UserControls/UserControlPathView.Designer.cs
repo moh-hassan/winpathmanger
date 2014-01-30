@@ -120,9 +120,9 @@
             this.listBoxCurrentPath.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
             this.listBoxCurrentPath.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.listBoxCurrentPath.FormattingEnabled = true;
-            this.listBoxCurrentPath.Location = new System.Drawing.Point(3, 49);
+            this.listBoxCurrentPath.Location = new System.Drawing.Point(3, 48);
             this.listBoxCurrentPath.Name = "listBoxCurrentPath";
-            this.listBoxCurrentPath.Size = new System.Drawing.Size(472, 160);
+            this.listBoxCurrentPath.Size = new System.Drawing.Size(472, 173);
             this.listBoxCurrentPath.TabIndex = 0;
             // 
             // radioButton1
@@ -145,7 +145,7 @@
             this.groupBox2.Controls.Add(this.listBoxCurrentPath);
             this.groupBox2.Location = new System.Drawing.Point(16, 280);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(478, 212);
+            this.groupBox2.Size = new System.Drawing.Size(478, 224);
             this.groupBox2.TabIndex = 39;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Path List Entries";

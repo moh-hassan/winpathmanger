@@ -235,6 +235,7 @@ namespace WinPathManager
             string newPath = Newlist.Aggregate((workingSentence, next) => workingSentence + ";" + next);
             Console.WriteLine("final path new length {0} ", newPath.Length);
             Console.WriteLine(newPath);
+
             msg = "The new path is " + Convert.ToString(size1) + Environment.NewLine;
             msg += "Are you sure to write the new path";
 
@@ -244,6 +245,8 @@ namespace WinPathManager
 
             //export to file
             FileSystemHelper.SavePath(CurrentPathText);
+
+            //update path
             Environment.SetEnvironmentVariable("path", newPath, EnvironmentVariableTarget.Machine); ;
 
             return true;

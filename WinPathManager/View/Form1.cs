@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
 using System.Text;
 using System.Windows.Forms;
 
@@ -18,9 +19,15 @@ namespace WinPathManager
             InitializeComponent();
             //  Icon = GetExecutableIcon();
         }
-
+        public   bool IsAdministrator()
+        {
+            WindowsIdentity identity = WindowsIdentity.GetCurrent();
+            WindowsPrincipal principal = new WindowsPrincipal(identity);
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
+        }
         private void Form1_Load(object sender, EventArgs e)
         {
+           // if (IsAdministrator()) MessageBox.Show("Ok admin");
             TestFolder();
             MaximizeBox = false;
             MinimizeBox = false;
@@ -86,6 +93,18 @@ namespace WinPathManager
         private void userControlPathView1_Load(object sender, EventArgs e)
         {
            
+        }
+
+        private void addNewEntryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AddPath f = new AddPath();
+            f.ShowDialog();
+        }
+
+        private void removeEntryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DelPath f = new DelPath();
+            f.ShowDialog();
         }
     }//
 }//
