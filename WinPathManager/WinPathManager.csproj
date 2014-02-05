@@ -38,9 +38,12 @@
     <ApplicationIcon>ReduceSize.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MvvmFx.Windows, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8891034390f17223, processorArchitecture=MSIL">
+    <Reference Include="MvvmFx.Windows">
+      <HintPath>..\..\..\..\..\New Folder (6)\mvvmfx\mvvmfx-77310\trunk\Src\MvvmFx.Windows\bin\Debug\MvvmFx.Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=2.1.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>framework\MvvmFx.Windows.dll</HintPath>
+      <HintPath>..\packages\NLog.2.1.0\lib\net40\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -53,18 +56,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase.WinForms, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8891034390f17223, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>framework\WindowsBase.WinForms.dll</HintPath>
-    </Reference>
-    <Reference Include="WindowsFormsToolkit, Version=0.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>framework\WindowsFormsToolkit.dll</HintPath>
-    </Reference>
-    <Reference Include="WindowsFormsToolkit.MVVM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>framework\WindowsFormsToolkit.MVVM.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddPath.cs">
@@ -73,17 +64,19 @@
     <Compile Include="AddPath.Designer.cs">
       <DependentUpon>AddPath.cs</DependentUpon>
     </Compile>
-    <Compile Include="Class1.cs" />
-    <Compile Include="convertor\Backcolorconvertor.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="convertor\BoolConvertor.cs" />
+    <Compile Include="Helper\BindingHelper.cs" />
+    <None Include="temp\Class2.cs" />
+    <Compile Include="ProgramInfo.cs" />
+    <Compile Include="AppExceptionHandler.cs" />
     <Compile Include="DelPath.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="DelPath.Designer.cs">
       <DependentUpon>DelPath.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helper\PathManager.cs" />
+    <Compile Include="ViewModel\AddPathViewModel.cs" />
+    <Compile Include="ViewModel\DelPathViewModel.cs" />
     <Compile Include="View\Help.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -132,7 +125,14 @@
     <EmbeddedResource Include="UserControls\UserControlPathView.resx">
       <DependentUpon>UserControlPathView.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="NLog.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -146,12 +146,7 @@
   <ItemGroup>
     <Content Include="framework\License.txt" />
     <Content Include="framework\MvvmFx.Windows.dll" />
-    <Content Include="framework\WindowsBase.WinForms.dll" />
-    <Content Include="framework\WindowsFormsToolkit.dll" />
-    <Content Include="framework\WindowsFormsToolkit.MVVM.dll" />
-    <Content Include="history.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="releasenotes.html" />
     <Content Include="License.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

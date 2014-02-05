@@ -1,25 +1,68 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
+using MvvmFx.Windows.Data;
+using MvvmFx.Windows.Input;
+using NLog;
+using WinPathManager.Helper;
+using WinPathManager.ViewModel;
 
 namespace WinPathManager
 {
     public partial class DelPath : Form
     {
+        private PathManager _pathManager = new PathManager();
+        public DelPathViewModel ViewModel = new DelPathViewModel();
+        private BindingManager _bindingManager = new BindingManager();
+        private CommandBindingManager commandBindingManager = new CommandBindingManager();
+        private static Logger _logger = LogManager.GetCurrentClassLogger();
+
+
+        //load event
         public DelPath()
         {
             InitializeComponent();
+            OnInitializeBinding();
+            BindCommands();
+            Load += OnLoad;
+            // checkedListBox1.DataSource = _pathManager.GetCurrentPathList();
+
+
         }
 
-        //remove entries
-        private void button1_Click(object sender, EventArgs e)
+        protected void OnInitializeBinding()
         {
+            FillList();
+        }
+
+        void BindCommands()
+        {
+            // commandBindingManager.AddCommand(ViewModel.RemoveCommand,buttonRemove);
+
+        }
+
+        private void OnLoad(object sender, EventArgs e)
+        {
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            StartPosition = FormStartPosition.CenterScreen;
+            //FillList();
+            buttonRemove.Click += OnRemove;
+        }
+
+
+        //remove entries
+        private void OnRemove(object sender, EventArgs e)
+        {
+            //check that there are selected items
+            var n = checkedListBox1.CheckedItems.Count;
+            if (n == 0)
+            {
+                MessageBox.Show("No entries is selected", "Stop", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
             string newPath = "";
+            string removedEntries = "";
 
             try
             {
@@ -33,63 +76,56 @@ namespace WinPathManager
                         newPath += checkedListBox1.Items[i].ToString() + ";";
 
                     }
+                    else
+                    {
+                        removedEntries += checkedListBox1.Items[i].ToString() + ";";
+                    }
                 }
 
                 newPath = newPath.TrimEnd(';');
                 //MessageBox.Show(s);
                 //  var    msg = "The new path is " + Convert.ToString(size1) + Environment.NewLine;
-                var msg2 = "Are you sure to Remove  the selected entries from the path";
+                var msg2 = string.Format("Are you sure to Remove  the selected entries from the path( {0} entries)", n);
                 var result2 = MessageBox.Show(msg2, "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
                 if (result2 == DialogResult.Cancel) return;
                 Cursor.Current = Cursors.WaitCursor;
-                Environment.SetEnvironmentVariable("path", newPath, EnvironmentVariableTarget.Machine);
-                MessageBox.Show("Sucess Updating the Path", "Information", MessageBoxButtons.OK,
+                // Environment.SetEnvironmentVariable("path", newPath, EnvironmentVariableTarget.Machine);
+                _pathManager.SaveProgramPath(newPath);
+                MessageBox.Show("Sucess Removing  the Path", "Information", MessageBoxButtons.OK,
                                 MessageBoxIcon.Information);
+                _logger.Info("Remove: {0}", removedEntries);
             }
             catch (Exception ex)
             {
 
                 MessageBox.Show(ex.Message);
+                _logger.ErrorException("Error in Remove Entry: ", ex);
             }
             finally
             {
                 //refresh list
                 checkedListBox1.Items.Clear();
                 FillList();
+                // buttonRemove.Enabled = false;
                 Cursor.Current = Cursors.Default;
             }
 
 
         }
 
-        private void DelPath_Load(object sender, EventArgs e)
-        {
-            FillList();
-        }
+
+
+
 
         void FillList()
         {
-            var CurrentPathText = Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Machine);
-            var CurrentPathList = CurrentPathText.Split(';').ToList();
 
+            var CurrentPathList = _pathManager.GetCurrentPathList();
             foreach (string item in CurrentPathList)
                 if (item != "") checkedListBox1.Items.Add(item);
 
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            if (button2.Text == "Sort")
-            {
-                checkedListBox1.Sorted = true;
-                // button2.Text = "Un Sort";
 
-            }
-            //else
-            //{
-            //    checkedListBox1.Sorted = false ;
-            //    button2.Text = "Sort"; 
-            //}
-        }
-    }
+    }//
 }

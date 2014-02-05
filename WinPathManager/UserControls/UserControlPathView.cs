@@ -5,7 +5,8 @@ using System.Windows.Forms;
 using MvvmFx.Windows.Data;
 using MvvmFx.Windows.Input;
 using WinPathManager;
-using WinPathManager.convertor;
+using WinPathManager.ViewModel;
+
 
 //using WindowsFormsToolkit.CommandManager;
 //using WindowsFormsToolkit.MVVM;
@@ -42,14 +43,12 @@ namespace WinPathManager
         protected void OnInitializeBinding()
         {
             _bindingManager = new BindingManager();
-            _bindingManager.Bindings.Add(
-               new TypedBinding<TextBox, PathEditorViewModel>(textBox1, t => t.Text, ViewModel, s => s.CurrentPathText));
+            //_bindingManager.Bindings.Add(
+            //   new TypedBinding<TextBox, PathEditorViewModel>(textBox1, t => t.Text, ViewModel, s => s.CurrentPathText));
 
             var v = new TypedBinding<Label, PathEditorViewModel>(labelPathLength, t => t.ForeColor, ViewModel,
                                                                     s => s.CurrentPathText);
-            v.Converter = new StringToColor();
-            _bindingManager.Bindings.Add(v);
-
+             
 
             _bindingManager.Bindings.Add(
               new TypedBinding<Label, PathEditorViewModel>(labelPathLength, t => t.Text, ViewModel, s => s.PathSummary));
@@ -90,21 +89,11 @@ namespace WinPathManager
             var commandBindingNotExist = new CommandBinding(ViewModel.FillNotExistCommand, radioButton3, "Click");
             commandBindingManager.CommandBindings.Add(new CommandBinding(ViewModel.FillNotExistCommand, radioButton3, "Click"));
 
-
-            //commandManager = new CommandManager();
-            //commandManager.Bind(ViewModel.RefeshCommand ,buttonRefresh );
-
-            //commandManager.Bind(ViewModel.RepairPathCommand, buttonRepair);
-            //commandManager.Bind(ViewModel.FillAllCommand, radioButton1);
-            //commandManager.Bind(ViewModel.FillDuplicatedCommand, radioButton2);
-            //commandManager.Bind(ViewModel.FillNotExistCommand, radioButton3);
+            var commandBindingRefresh = new CommandBinding(ViewModel.RefreshCommand, buttonRefresh, "Click");
+            commandBindingManager.CommandBindings.Add(commandBindingRefresh);
 
 
-
-            //TODO: bind command refresh to buttonRefresh, method refreshcontrols
-            //CommandService.RefreshListCommand = new SetCommand("Refresh all", RefreshControls);
-            //CommandService.CommandManager.Bind(CommandService.RefreshListCommand, buttonRefresh);
-
+            
 
             //TODO: bind command of menu options
         }
@@ -155,13 +144,14 @@ namespace WinPathManager
 
         void ShowInfo()
         {
-            textBox1.BackColor = Color.White;
+           // textBox1.BackColor = Color.White;
               labelPathLength.ForeColor = ViewModel.Over1023 ? Color.Red : Color.Black  ; ;
             radioButton1.Checked = true;
             buttonRepair.Enabled = ViewModel.Over1023;
             //ShowErrorProvider();
         }
 
+         
         //private void ShowErrorProvider()
         //{
         //    {

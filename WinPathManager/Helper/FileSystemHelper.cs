@@ -97,20 +97,6 @@ namespace PathUtilty
             return listofdest;
         }
 
-        public static  void SavePath(string path)
-        {
-          //  if (!Directory.Exists("backup" ))
-          //  Directory .CreateDirectory(pathString);
-
-           // System.IO.Directory.CreateDirectory(pathString);
-
-            //TODO: Check for directory exist , create folder
-            DateTime dt = DateTime.Now; // new DateTime(2008, 3, 9, 16, 5, 7, 123);
-
-            string fname = "backup\\path" + String.Format("{0:yyyyMMdd-hhmmss}", dt) + ".txt";
-
-           // string path = textBox1.Text;
-            File.WriteAllText(fname, path);
-        }
+        
     }//
 }//

@@ -6,29 +6,27 @@ using System.Windows.Forms;
 using BusinessObjects;
 using MvvmFx.Windows.Input;
 using PathUtilty;
- 
+using WinPathManager.Helper;
 
-namespace WinPathManager
+namespace WinPathManager.ViewModel
 {
 
     public class PathEditorViewModel : BusinessObject
     {
         #region properties
 
+        private PathManager _pathManager = new PathManager();
       
 
-       // private string currentPathText;
-       // [Notify]
-      //  [Notify("CurrentPathText")]
-        private string currentPathText;
+        
+        private string _currentPathText;
         public string CurrentPathText
         {
-        //    get { return currentPathText; } 
-            get { return currentPathText; }
+        get { return _currentPathText; }
             set 
             {
 
-                currentPathText = value;
+                _currentPathText = value;
                 Init();
                 OnPropertyChanged("CurrentPathText");
             }
@@ -49,24 +47,25 @@ namespace WinPathManager
         //public Color
 
         public   BindingSource bs = new BindingSource();
-
-
-
-
-
         #endregion properties
+
         #region Commands
        
         public BoundCommand RepairPathCommand
         {
-            get { return new BoundCommand(RepairPathAction, (o) => Over1023 , null ); }
+            get { return new BoundCommand(RepairPathAction, o => Over1023 , null ); }
+        }
+
+        public BoundCommand RefreshCommand
+        {
+            get { return new BoundCommand(RefreshAction, o => true, null); }
         }
 
 
         public BoundCommand FillAllCommand
         {
 
-            get { return new BoundCommand((o) => bs.DataSource = CurrentPathList, (o) => true, null); }
+            get { return new BoundCommand(o => bs.DataSource = CurrentPathList, o => true, null); }
         }
 
         
@@ -83,61 +82,31 @@ namespace WinPathManager
             get { return new BoundCommand((o) => bs.DataSource = NotExistList, (o) => NotExistList.Count > 0, null); }
         }
 
-         
-
-         
-
-        //public ICommand RefeshCommand
-        //{
-        //    get { return new ActionCommand("Refresh", () => true, Refresh); }
-        //}
-
-        
-
         #endregion
 
         #region Events
 
 
-        //public event EventHandler PathChange;
-        //protected void OnPathChange(object sender, EventArgs e)
-        //{
-        //    Debug.WriteLine("onpathchane");
-        //    if (PathChange != null)
-        //        PathChange(sender, e);
-        //}
-
-        //public event EventHandler PathOverLength;
-        //protected void OnPathOverLength(object sender, EventArgs e)
-        //{
-        //    Debug.WriteLine("PathOverLength event");
-        //    if (PathOverLength != null)
-        //        PathOverLength(sender, e);
-        //}
-
-        //public event EventHandler PathRepairing;
-        //protected void OnPathRepairing(object sender, EventArgs e)
-        //{
-        //    Debug.WriteLine("PathRepairing event");
-        //    if (PathRepairing != null)
-        //        PathRepairing(sender, e);
-        //}
-
-
+         
         #endregion Event
 
 
 
         public PathEditorViewModel()
         {
-            CurrentPathText = Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Machine);
+           // CurrentPathText = Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Machine);
+            CurrentPathText = _pathManager.GetCurrentPathText();
             bs.DataSource = CurrentPathList;
         }
 
         void Refresh()
         {
-        //    MessageBox.Show("hi");
-            CurrentPathText = Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Machine);
+        //    MessageBox.Show("refresh");
+            CurrentPathList.Clear();
+            CurrentPathText = _pathManager.GetCurrentPathText();
+            Init();
+            bs.DataSource = null ;
+            bs.DataSource = CurrentPathList;
         }
 
         /// <summary>
@@ -145,35 +114,23 @@ namespace WinPathManager
         /// </summary>
         public   void Init()
         {
+             
             if (CurrentPathText != null)
             {
                 CurrentPathLength = CurrentPathText.Length;
-            
-
-
-                CurrentPathList = CurrentPathText.Split(';').ToList();
-                //   CurrentPathList = new ObservableCollection<string>(aa);
-
-                //      MyList = CurrentPathList;
-
+                CurrentPathList = _pathManager.GetCurrentPathList();
+                     
                 CurrentPathCount = CurrentPathList.Count;
                 PathSummary = string.Format("Length: {0}, Count: {1}", CurrentPathLength, CurrentPathCount);
                 Over1023 = CurrentPathLength > 1023;
+
                 PathUnique = CurrentPathList.Where(item => Directory.Exists(item)) // remove not exist
                                                 .Distinct().ToList();  //remove duplicated
 
-                DublicatedList = CurrentPathList
-                     .GroupBy(i => i)
-                     .Where(g => g.Count() > 1)
-                     .Select(g => g.Key).ToList();
+                DublicatedList = _pathManager.GetDuplicatedList(CurrentPathList);
 
                 NotExistList = CurrentPathList.Where(item => !Directory.Exists(item)).ToList();
-
-                //OnPathChange(this, null);
-                //if (CurrentPathText.Length > 1023)
-                //    OnPathOverLength(this, null);
                 if (Over1023) PathSummary += " (Over 1023 char)";
-         
             }
 
         }
@@ -183,6 +140,11 @@ namespace WinPathManager
             var flag = RepairPath();
         }
 
+        public void RefreshAction(object obj)
+        {
+           // MessageBox.Show("refresh");
+            Refresh();
+        }
         /// <summary>
         /// Remove dublicated entries /not exist ones
         /// </summary>
@@ -209,12 +171,6 @@ namespace WinPathManager
                 Console.WriteLine("{0}: excluding dublicated entries", size1);
                 
 
-            //int newsize = PathUnique.Sum(item => item.Length + 1);
-            //int newsize = Newlist.Sum(item => item.Length + 1);
-            //Console.WriteLine("newsize {0}", newsize);
-
-            //add every element as short/asis 
-
             //shoorten the path
             if (size1 > 1023)
             {
@@ -223,11 +179,9 @@ namespace WinPathManager
                 for (int index = Newlist.Count - 1; index > 0; index--)
                 {
                     var item = Newlist[index];
-                    
-
                     Newlist[index] = FileSystemHelper.GetShortPathName(item);
                     size1 = Newlist.Sum(item2 => item2.Length + 1);
-                    Console.WriteLine("shoert: {0}, newsize: {1}", size1, Newlist[index]);
+                    Console.WriteLine("short: {0}, newsize: {1}", size1, Newlist[index]);
                     if (size1 < 1023) break; //1023- 10 extra room for any next installation
                 }//for
             }//if
@@ -244,10 +198,11 @@ namespace WinPathManager
             if (result == DialogResult.Cancel) return false;
 
             //export to file
-            FileSystemHelper.SavePath(CurrentPathText);
+            _pathManager.BackupPath();
 
             //update path
-            Environment.SetEnvironmentVariable("path", newPath, EnvironmentVariableTarget.Machine); ;
+           // Environment.SetEnvironmentVariable("path", newPath, EnvironmentVariableTarget.Machine); ;
+            _pathManager.SaveProgramPath(newPath);
 
             return true;
         }

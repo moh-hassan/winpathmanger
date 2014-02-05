@@ -2,7 +2,7 @@
 
 namespace BusinessObjects
 {
-    //base class for all business objects
+    //base class for all business objects (viewmodel)
     public abstract class BusinessObject : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;

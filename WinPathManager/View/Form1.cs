@@ -1,48 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Principal;
-using System.Text;
 using System.Windows.Forms;
+using NLog;
+using WinPathManager.Helper;
 
 namespace WinPathManager
 {
     public partial class Form1 : Form
     {
+        private static   Logger logger = LogManager.GetCurrentClassLogger();
         public Form1()
         {
             InitializeComponent();
             //  Icon = GetExecutableIcon();
         }
-        public   bool IsAdministrator()
-        {
-            WindowsIdentity identity = WindowsIdentity.GetCurrent();
-            WindowsPrincipal principal = new WindowsPrincipal(identity);
-            return principal.IsInRole(WindowsBuiltInRole.Administrator);
-        }
+        
         private void Form1_Load(object sender, EventArgs e)
         {
-           // if (IsAdministrator()) MessageBox.Show("Ok admin");
-            TestFolder();
+            FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
             MinimizeBox = false;
-            this.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-            tabControl1.ImageList = imageList1;
-            tabPage1.ImageIndex = 0;
+            StartPosition = FormStartPosition.CenterScreen;
 
-            //center form
-            int boundWidth = Screen.PrimaryScreen.Bounds.Width;
-            int boundHeight = Screen.PrimaryScreen.Bounds.Height;
-            int x = boundWidth - this.Width;
-            int y = boundHeight - this.Height;
-            this.Location = new Point(x / 2, y / 2);
-            toolStripStatusLabel1.Text = string .Format( "Computer Name: {0}  Current User:{1} " ,Environment.MachineName , Environment.UserName);
-           // MessageBox.Show(statusStrip1.Text);
+
+             
+            // if (IsAdministrator()) MessageBox.Show("Ok admin");
+            TestFolder();
+            this.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+            //    tabControl1.ImageList = imageList1;
+            //    tabPage1.ImageIndex = 0;
+             
+            toolStripStatusLabel1.Text = string.Format("Computer Name: {0}  Current User:{1} ", Environment.MachineName, Environment.UserName);
+            // MessageBox.Show(statusStrip1.Text);
 
         }
 
@@ -51,28 +41,29 @@ namespace WinPathManager
             Application.Exit();
         }
 
-       
+
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
 
             if (e.CloseReason == CloseReason.WindowsShutDown) return;
             var result = MessageBox.Show(this, "Are you sure you want to exit?", "Exit", MessageBoxButtons.YesNo);
-            switch (result )
+            switch (result)
             {
                 case DialogResult.No:
                     e.Cancel = true;
                     break;
                 default:
+                    logger.Info("Application Exit");
                     break;
             }
         }
 
-        private    void TestFolder()
+        private void TestFolder()
         {
             string directoryString =
                Directory.GetCurrentDirectory() + @"\backup";
-          //  Directory.CreateDirectory(directoryString);
+            //  Directory.CreateDirectory(directoryString);
             if (Directory.Exists(directoryString))
                 Console.WriteLine("Directory \"{0}\" exists", directoryString);
             else
@@ -81,7 +72,7 @@ namespace WinPathManager
                 Directory.CreateDirectory(directoryString);
             }
 
-             
+
         }
 
         private void helpToolStripMenuItem_Click(object sender, EventArgs e)
@@ -92,7 +83,7 @@ namespace WinPathManager
 
         private void userControlPathView1_Load(object sender, EventArgs e)
         {
-           
+
         }
 
         private void addNewEntryToolStripMenuItem_Click(object sender, EventArgs e)
@@ -106,5 +97,17 @@ namespace WinPathManager
             DelPath f = new DelPath();
             f.ShowDialog();
         }
+
+        private void exportPathToFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+            PathManager pathManager = new PathManager();
+          string  fname=  pathManager.ExportToFile();
+          //  if (fname !=string .Empty )
+            logger.Info("Export path to file: {0}",fname);
+            //MessageBox.Show(fname);
+        }
+
+         
     }//
 }//
