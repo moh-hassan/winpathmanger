@@ -1,24 +1,55 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Data;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using MvvmFx.Windows.Data;
 using MvvmFx.Windows.Input;
 using NLog;
 using WinPathManager.Helper;
 using WinPathManager.ViewModel;
+/********************************************************************************************************
+ * 
+ * WinPath Manager
+ * Copyright 2014 Mohamed Hassan 
+ * Apache License 2.0 (Apache)
+ * 
+ * https://pathmanger.codeplex.com/
+  * 
+ ******************************************************************************************************/
 
-namespace WinPathManager
+
+namespace WinPathManager.UserControls
 {
-    public partial class DelPath : Form
+    public partial class UserControlRemoveEntry : UserControl
     {
-        private PathManager _pathManager = new PathManager();
+        PathManager _pathManager = PathManager.PathManagerInstance;
+        // private PathManager _pathManager = new PathManager();
         public DelPathViewModel ViewModel = new DelPathViewModel();
         private BindingManager _bindingManager = new BindingManager();
         private CommandBindingManager commandBindingManager = new CommandBindingManager();
         private static Logger _logger = LogManager.GetCurrentClassLogger();
 
+        public object DataSource
+        {
+            get
+            {
+                return checkedListBox1.DataSource;
+            }
+            set
+            {
+                if (DataSource != value)
+                {
+                    checkedListBox1.DataSource = value;
+                    //  OnDataSourceChanged();
+                }
+            }
+        }
 
-        //load event
-        public DelPath()
+        public UserControlRemoveEntry()
         {
             InitializeComponent();
             OnInitializeBinding();
@@ -26,31 +57,32 @@ namespace WinPathManager
             Load += OnLoad;
             // checkedListBox1.DataSource = _pathManager.GetCurrentPathList();
 
-
         }
 
         protected void OnInitializeBinding()
         {
-            FillList();
         }
 
         void BindCommands()
         {
             // commandBindingManager.AddCommand(ViewModel.RemoveCommand,buttonRemove);
-
         }
 
         private void OnLoad(object sender, EventArgs e)
         {
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            MaximizeBox = false;
-            MinimizeBox = false;
-            StartPosition = FormStartPosition.CenterScreen;
-            //FillList();
+            DataSource = _pathManager.CurrentPathList;
             buttonRemove.Click += OnRemove;
+
+
+            _pathManager.PathChanged += _pathManager_PathChanged;
         }
 
+        void _pathManager_PathChanged(object sender, PathManagerEventArgs e)
+        {
+            DataSource = null;
+            DataSource = _pathManager.CurrentPathList;
 
+        }
         //remove entries
         private void OnRemove(object sender, EventArgs e)
         {
@@ -90,42 +122,30 @@ namespace WinPathManager
                 if (result2 == DialogResult.Cancel) return;
                 Cursor.Current = Cursors.WaitCursor;
                 // Environment.SetEnvironmentVariable("path", newPath, EnvironmentVariableTarget.Machine);
+                newPath = newPath.TrimEnd(';');
                 _pathManager.SaveProgramPath(newPath);
-                MessageBox.Show("Sucess Removing  the Path", "Information", MessageBoxButtons.OK,
+              
+                _pathManager.CurrentPathText = newPath;
+                MessageBox.Show("Sucess Removing  the entry: " + removedEntries, "Information", MessageBoxButtons.OK,
                                 MessageBoxIcon.Information);
+                _pathManager.Init();
                 _logger.Info("Remove: {0}", removedEntries);
+
             }
             catch (Exception ex)
             {
-
-                MessageBox.Show(ex.Message);
                 _logger.ErrorException("Error in Remove Entry: ", ex);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
-                //refresh list
-                checkedListBox1.Items.Clear();
-                FillList();
-                // buttonRemove.Enabled = false;
+
                 Cursor.Current = Cursors.Default;
             }
 
 
         }
 
-
-
-
-
-        void FillList()
-        {
-
-            var CurrentPathList = _pathManager.GetCurrentPathList();
-            foreach (string item in CurrentPathList)
-                if (item != "") checkedListBox1.Items.Add(item);
-
-        }
-
-
     }//
 }
+

@@ -1,22 +1,57 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Windows.Forms;
 using BusinessObjects;
 using Microsoft.Win32;
 using MvvmFx.Windows.Input;
 using NLog;
+using WinPathManager.Helper;
+/********************************************************************************************************
+ * 
+ * WinPath Manager
+ * Copyright 2014 Mohamed Hassan 
+ * Apache License 2.0 (Apache)
+ * 
+ * https://pathmanger.codeplex.com/
+  * 
+ ******************************************************************************************************/
+
 
 namespace WinPathManager.ViewModel
 {
     public class AddPathViewModel : BusinessObject
     {
+        PathManager _pathManager = PathManager.PathManagerInstance;
+     
         private static Logger _logger = LogManager.GetCurrentClassLogger();
         public List<string> InstalledPrograms { get; set; }
         private List<ProgramInfo> InstalledAppsInfo { get; set; }
         public BoundCommand BrowseCommand;
         // public  CommandBindingManager commandBindingManager = new CommandBindingManager();
+        //public BindingSource BS;
+        public event NotifyCollectionChangedEventHandler CollectionChanged = (o, e) => { };
 
+
+        public bool _isExist;
+        public bool IsExist
+        {
+            get { return _isExist; }
+            set
+            {
+                if (_isExist != value)
+                {
+                    _isExist = value;
+                    OnPropertyChanged("IsExist");
+                }
+            }
+        }
+
+        public BoundCommand AddEntryCommand
+        {
+            get { return new BoundCommand(AddAction, CanAdd, Entry); }
+        }
         
 
         private string _entry;
@@ -114,15 +149,15 @@ namespace WinPathManager.ViewModel
         //    Entry = result.InstallLocation;
         //}
 
-        public BoundCommand AddEntryCommand
-        {
-            get { return new BoundCommand(AddAction, CanAdd, null); }
-        }
-
+       
         public bool CanAdd(object obj)
         {
-             
-            return Entry != string.Empty;
+            //string s = obj.ToString();
+
+            //return Entry != string.Empty
+            //    || !PathManager.CurrentPathText.Contains(s);
+         //   MessageBox.Show(obj.ToString() );
+            return true;
         }
 
 
@@ -131,9 +166,18 @@ namespace WinPathManager.ViewModel
         //actions: check if path is valid and  not in path or not exist
         //confirm before modify path
         //modify path , refresh form
-        void AddAction(object obj)
+        private void AddAction(object obj)
         {
-            string addedEntries = "";
+            //Add();
+            MessageBox.Show(Entry);
+            _pathManager.AddPathEntry(Entry );
+        
+        }
+
+        void Add()
+        {
+
+        string addedEntries = "";
 
             try
             {

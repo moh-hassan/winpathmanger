@@ -1,4 +1,14 @@
 ﻿using Microsoft.Win32;
+/********************************************************************************************************
+ * 
+ * WinPath Manager
+ * Copyright 2014 Mohamed Hassan 
+ * Apache License 2.0 (Apache)
+ * 
+ * https://pathmanger.codeplex.com/
+ * 
+ ******************************************************************************************************/
+
 
 namespace WinPathManager
 {

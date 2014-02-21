@@ -35,7 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>ReduceSize.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MvvmFx.Windows">
@@ -58,25 +59,54 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddPath.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AddPath.Designer.cs">
-      <DependentUpon>AddPath.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Helper\BindingHelper.cs" />
-    <None Include="temp\Class2.cs" />
+    <None Include="Properties\DataSources\WinPathManager.Helper.PathManager.datasource" />
+    <Compile Include="Helper\ExtensionsForEventHandler.cs" />
+    <Compile Include="Helper\PathManagerEventArgs.cs" />
+    <Compile Include="Helper\ExtensionsForCommandBinding.cs" />
     <Compile Include="ProgramInfo.cs" />
     <Compile Include="AppExceptionHandler.cs" />
-    <Compile Include="DelPath.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DelPath.Designer.cs">
-      <DependentUpon>DelPath.cs</DependentUpon>
-    </Compile>
     <Compile Include="Helper\PathManager.cs" />
+    <Compile Include="UserControls\UserControlAddEntry.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\UserControlAddEntry.Designer.cs">
+      <DependentUpon>UserControlAddEntry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\UserControlRemoveEntry.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\UserControlRemoveEntry.Designer.cs">
+      <DependentUpon>UserControlRemoveEntry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\UserControlReorder.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\UserControlReorder.Designer.cs">
+      <DependentUpon>UserControlReorder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\UserControlTestBed.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\UserControlTestBed.Designer.cs">
+      <DependentUpon>UserControlTestBed.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\UserControlViewText.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\UserControlViewText.Designer.cs">
+      <DependentUpon>UserControlViewText.cs</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\AddPathViewModel.cs" />
     <Compile Include="ViewModel\DelPathViewModel.cs" />
+    <Compile Include="ViewModel\MainFormViewModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="View\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Help.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -86,12 +116,6 @@
     <Compile Include="Helper\FileSystemHelper.cs" />
     <Compile Include="model\BusinessObject.cs" />
     <Compile Include="ViewModel\PathEditorViewModel.cs" />
-    <Compile Include="View\Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserControls\UserControlPathView.cs">
@@ -100,17 +124,26 @@
     <Compile Include="UserControls\UserControlPathView.Designer.cs">
       <DependentUpon>UserControlPathView.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="AddPath.resx">
-      <DependentUpon>AddPath.cs</DependentUpon>
+    <EmbeddedResource Include="UserControls\UserControlAddEntry.resx">
+      <DependentUpon>UserControlAddEntry.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DelPath.resx">
-      <DependentUpon>DelPath.cs</DependentUpon>
+    <EmbeddedResource Include="UserControls\UserControlRemoveEntry.resx">
+      <DependentUpon>UserControlRemoveEntry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\UserControlReorder.resx">
+      <DependentUpon>UserControlReorder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\UserControlTestBed.resx">
+      <DependentUpon>UserControlTestBed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\UserControlViewText.resx">
+      <DependentUpon>UserControlViewText.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Help.resx">
       <DependentUpon>Help.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="View\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -132,7 +165,6 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -144,19 +176,21 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="framework\License.txt" />
-    <Content Include="framework\MvvmFx.Windows.dll" />
-    <Content Include="releasenotes.html" />
+    <Content Include="framework\MvvmFx\License.txt" />
+    <Content Include="framework\MvvmFx\MvvmFx.Windows.dll" />
+    <Content Include="releasenotes.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="License.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Readme.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ReduceSize.ico" />
-    <EmbeddedResource Include="sucess.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="framework\nlog\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

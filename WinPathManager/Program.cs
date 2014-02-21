@@ -4,6 +4,16 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using NLog;
+/********************************************************************************************************
+ * 
+ * WinPath Manager
+ * Copyright ©2014 Mohamed Hassan 
+ * Apache License 2.0 (Apache)
+ * 
+ * https://pathmanger.codeplex.com/
+ * 
+ ******************************************************************************************************/
+
 
 namespace WinPathManager
 {
@@ -24,9 +34,7 @@ namespace WinPathManager
             logger.Info("Apllication Start");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
-            //Application.Run(new DelPath());
-
+            Application.Run(new MainForm());
         }
     }
 }

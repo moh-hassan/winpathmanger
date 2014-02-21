@@ -14,7 +14,7 @@ namespace WinPathManager
         {
             try
             {
-
+                
                 DialogResult result = ShowException(e.Exception);
 
                 if (result == DialogResult.Abort)
@@ -26,6 +26,7 @@ namespace WinPathManager
                 try
                 {
                     MessageBox.Show("Fatal Error", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    
                 }
                 finally
                 {

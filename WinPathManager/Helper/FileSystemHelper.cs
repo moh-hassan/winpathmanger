@@ -9,7 +9,7 @@ using System.Text;
 namespace PathUtilty
 {
     /// <summary>
-    /// Get short path name for folder
+    /// API Get short path name 8.3 / long file name for folder
     /// </summary>
     public class FileSystemHelper
     {

@@ -1,182 +1,124 @@
 ﻿using System;
-using System.Drawing;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using MvvmFx.Windows.Data;
 using MvvmFx.Windows.Input;
-using WinPathManager;
+using PathUtilty;
+using WinPathManager.Helper;
+//using WinPathManager.ViewModel;
 using WinPathManager.ViewModel;
+using Binding = MvvmFx.Windows.Data.Binding;
+/********************************************************************************************************
+ * 
+ * WinPath Manager
+ * Copyright 2014 Mohamed Hassan 
+ * Apache License 2.0 (Apache)
+ * 
+ * https://pathmanger.codeplex.com/
+  * 
+ ******************************************************************************************************/
 
 
-//using WindowsFormsToolkit.CommandManager;
-//using WindowsFormsToolkit.MVVM;
 
 namespace WinPathManager
 {
     public partial class UserControlPathView : UserControl //BaseUserControl //
     {
-        public PathEditorViewModel ViewModel = new PathEditorViewModel();
-        private BindingManager _bindingManager;
-        public string BackupFolder = "backup";
-        public string AppPath;
-        //   private CommandManager commandManager;
+        private  PathManager _pathManager = PathManager.PathManagerInstance;
         private CommandBindingManager commandBindingManager = new CommandBindingManager();
+        private BindingManager _bindingManager= new BindingManager( );
+        private PathEditorViewModel viewModel;  
+        private string BackupFolder = "backup";
+        private string AppPath;
+     
+ 
 
-        //private ErrorProvider errorProvider2 = new ErrorProvider();
-
-        public UserControlPathView() //: this(new PathEditorViewModel() ) 
+        public object DataSource
         {
-            InitializeComponent();// 
-            OnInitializeBinding();
-            BindCommands();
-            CreateBackupFolder();
-        }
-
-        //  public UserControlPathView()
-        //public UserControlPathView(PathEditorViewModel viewModel):base(viewModel)
-        //{
-        //    InitializeComponent();//          
-        //    BindCommands();
-        //}
-
-        //protected override void OnInitializeBinding()
-        protected void OnInitializeBinding()
-        {
-            _bindingManager = new BindingManager();
-            //_bindingManager.Bindings.Add(
-            //   new TypedBinding<TextBox, PathEditorViewModel>(textBox1, t => t.Text, ViewModel, s => s.CurrentPathText));
-
-            var v = new TypedBinding<Label, PathEditorViewModel>(labelPathLength, t => t.ForeColor, ViewModel,
-                                                                    s => s.CurrentPathText);
-             
-
-            _bindingManager.Bindings.Add(
-              new TypedBinding<Label, PathEditorViewModel>(labelPathLength, t => t.Text, ViewModel, s => s.PathSummary));
-
-            //button buttonRepair
-            _bindingManager.Bindings.Add(
-             new TypedBinding<Button, PathEditorViewModel>(buttonRepair, t => t.Enabled, ViewModel, s => s.Over1023));
-
-
-
-            listBoxCurrentPath.DataSource = ViewModel.bs;
-
-
-        }
-
-        void CreateBackupFolder()
-        {
-            //backup
-            if (!Directory.Exists("backup"))
+            get
             {
-                Directory.CreateDirectory("backup");
+                return this.listBoxCurrentPath.DataSource;
             }
-        }
-        void BindCommands()
-        {
-
-
-            var commandBindingRepair = new CommandBinding(ViewModel.RepairPathCommand, buttonRepair, "Click");
-            commandBindingManager.CommandBindings.Add(commandBindingRepair);
-
-
-            var commandBindingFillAll = new CommandBinding(ViewModel.FillAllCommand, radioButton1, "Click");
-            commandBindingManager.CommandBindings.Add(commandBindingFillAll);
-
-            var commandBindingDublicate = new CommandBinding(ViewModel.FillDuplicatedCommand, radioButton2, "Click");
-            commandBindingManager.CommandBindings.Add(commandBindingDublicate);
-
-            var commandBindingNotExist = new CommandBinding(ViewModel.FillNotExistCommand, radioButton3, "Click");
-            commandBindingManager.CommandBindings.Add(new CommandBinding(ViewModel.FillNotExistCommand, radioButton3, "Click"));
-
-            var commandBindingRefresh = new CommandBinding(ViewModel.RefreshCommand, buttonRefresh, "Click");
-            commandBindingManager.CommandBindings.Add(commandBindingRefresh);
-
-
-            
-
-            //TODO: bind command of menu options
-        }
-
-
-        //TODO: exceptionhandling command manager,others
-        //TODO: count/length of different lists
-        //TODO: display uniqueList with Length/count
-
-
-
-        void PathEditor_PathChange(object sender, EventArgs e)
-        {
-            //   MessageBox.Show("path change event");
-            ShowInfo();
-        }
-        /*
-        void PathEditor_PathOverLength(object sender, EventArgs e)
-        {
-           // MessageBox.Show("path over1023 event");
-            //ShowInfo();
-        }
-
-        void PathEditor_PathRepairing(object sender, EventArgs e)
-        {
-           // MessageBox.Show("path repairing event");
-            //ShowInfo();
-        }
-
-  */
-
-
-
-        private void UserControlPathView_Load(object sender, EventArgs e)
-        {
-            this.errorProvider1.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
-            //this.errorProvider1.ContainerControl = this;
-
-            //  Icon icon = EmbededResourceManager.GetIcon("sucess.ico");//new System.Drawing.Icon("tick.ico");
-            //this.errorProvider2.Icon = icon ; 
-            //this.errorProvider2.BlinkStyle = ErrorBlinkStyle.NeverBlink;
-            //-----------------
-
-            //    ViewModel.PathChange += new EventHandler(PathEditor_PathChange);
-            ShowInfo();
-        }
-
-
-        void ShowInfo()
-        {
-           // textBox1.BackColor = Color.White;
-              labelPathLength.ForeColor = ViewModel.Over1023 ? Color.Red : Color.Black  ; ;
-            radioButton1.Checked = true;
-            buttonRepair.Enabled = ViewModel.Over1023;
-            //ShowErrorProvider();
+            set
+            {
+                if (DataSource != value)
+                {
+                    listBoxCurrentPath.DataSource = value;
+                }
+            }
         }
 
          
-        //private void ShowErrorProvider()
+         
+        public UserControlPathView()
+        {
+            InitializeComponent(); // 
+            viewModel = new PathEditorViewModel(); // (DataSource);
+
+        }
+
+
+       
+        private void UserControlPathView_Load(object sender, EventArgs e)
+        {
+            AddBindings();
+            BindCommands();
+          
+           
+           // _pathManager.AddEntry += _pathManager_AddEntry;
+           // _pathManager.RemoveEntry += _pathManager_AddEntry;
+            _pathManager.PathChanged += _pathManager_PathChanged;
+            radioButton1.PerformClick();
+          
+        }
+
+        void AddBindings()
+        {
+           // _bindingManager = new BindingManager();
+            _bindingManager.Bindings.Add(new Binding(labelPathLength, "Text",viewModel._pathManager, "PathSummary"));
+            _bindingManager.Bindings.Add(new Binding(labelPathLength, "ForeColor",viewModel. _pathManager, "PathSummaryColor"));
+            _bindingManager.Bindings.Add(new Binding(buttonRepair, "Enabled",viewModel. _pathManager, "CanRepair"));
+          //  _bindingManager.Bindings.Add(new Binding(radioButton2, "Enabled", viewModel._pathManager, "IsDuplicated"));
+
+
+            DataSource = viewModel.bs ;
+        }
+
+        void BindCommands()
+        {
+            commandBindingManager.RegisterCommand(viewModel.RepairPathCommand, buttonRepair);
+            commandBindingManager.RegisterCommand(viewModel.FillAllCommand, radioButton1);
+            commandBindingManager.RegisterCommand(viewModel.FillDuplicatedCommand, radioButton2);
+            commandBindingManager.RegisterCommand(viewModel.FillNotExistCommand, radioButton3);
+
+        }
+
+        private void _pathManager_PathChanged(object sender, PathManagerEventArgs e)
+        {
+
+            radioButton2.Enabled = _pathManager.DublicatedList.Count > 0;
+            radioButton3.Enabled = _pathManager.NotExistList.Count > 0;
+           // viewModel.bs.ResetBindings(false );
+            DataSource = null;
+            DataSource = viewModel.GetActiveList();
+        }
+
+        //void ManageRadioButtons()
         //{
+        //    switch (viewModel.ActiveList )
         //    {
-        //        if (textBox1.Text.Length >1023)
-        //        {
-        //            errorProvider1.SetError(textBox1, "Path Exceed 1023 char");
-        //        }
-        //        else
-        //        {
-        //            errorProvider2.SetError(textBox1, "Path Is less 1023 char");
-        //        }//if
+        //        case 1:
+        //            break;
+        //        case 2:
+        //            break;
+        //        case 3:
+        //            radioButton3.PerformClick();
+        //            break;
         //    }
         //}
 
-    }//
-
-
-    //public class BaseUserControl : ControlView<PathEditorViewModel>
-    //{
-    //    public BaseUserControl() : this(new PathEditorViewModel()) { }
-
-    //    public BaseUserControl(PathEditorViewModel viewModel)
-    //        : base(viewModel)
-    //    {
-    //    }
-    //}
-
+    } //
 }//
+

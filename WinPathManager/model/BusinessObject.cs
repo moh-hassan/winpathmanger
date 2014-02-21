@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace BusinessObjects
 {
@@ -32,6 +33,7 @@ namespace BusinessObjects
         protected void OnPropertyChanged(string propertyName)
         {
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+           // Console.WriteLine(propertyName);
         }
     }
 }

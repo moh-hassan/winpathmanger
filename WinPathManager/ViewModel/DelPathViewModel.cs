@@ -6,6 +6,16 @@ using BusinessObjects;
 using Microsoft.Win32;
 using MvvmFx.Windows.Input;
 using NLog;
+/********************************************************************************************************
+ * 
+ * WinPath Manager
+ * Copyright 2014 Mohamed Hassan 
+ * Apache License 2.0 (Apache)
+ * 
+ * https://pathmanger.codeplex.com/
+  * 
+ ******************************************************************************************************/
+
 
 namespace WinPathManager.ViewModel
 {
